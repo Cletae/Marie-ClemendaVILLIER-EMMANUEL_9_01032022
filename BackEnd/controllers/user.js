@@ -1,9 +1,11 @@
-const { User } = require("../models");
-const { hash } = require("../services/password");
+const { User } = require('../models');
+const { hash } = require('../services/password');
 
 const create = async (req, res) => {
   try {
-    const { name, type, email, status, password } = req.body;
+    const {
+      name, type, email, status, password,
+    } = req.body;
     const user = await User.create({
       name,
       type,
@@ -24,8 +26,7 @@ const create = async (req, res) => {
 
 const get = async (req, res) => {
   const { user } = req;
-  if (!user)
-    return res.status(401).send({ message: "user must be authenticated" });
+  if (!user) return res.status(401).send({ message: 'user must be authenticated' });
   try {
     const {
       key: id,
@@ -48,18 +49,19 @@ const get = async (req, res) => {
 
 const list = async (req, res) => {
   const { user } = req;
-  if (!user)
-    return res.status(401).send({ message: "user must be authenticated" });
+  if (!user) return res.status(401).send({ message: 'user must be authenticated' });
   try {
     const users = await User.findAll();
     return res.json(
-      users.map(({ key: id, name, type, email, status }) => ({
+      users.map(({
+        key: id, name, type, email, status,
+      }) => ({
         id,
         name,
         type,
         email,
         status,
-      }))
+      })),
     );
   } catch (err) {
     return res.status(500).send({ message: err.message });
@@ -68,18 +70,16 @@ const list = async (req, res) => {
 
 const update = async (req, res) => {
   const { user } = req;
-  if (!user)
-    return res.status(401).send({ message: "user must be authenticated" });
+  if (!user) return res.status(401).send({ message: 'user must be authenticated' });
   try {
-    if (user.type !== "Admin" && user.key !== req.params.id) {
-      return res.status(401).send({ message: "unauthorized action" });
+    if (user.type !== 'Admin' && user.key !== req.params.id) {
+      return res.status(401).send({ message: 'unauthorized action' });
     }
-    const { name, email, type, status } = req.body;
+    const {
+      name, email, type, status,
+    } = req.body;
     const toUpdate = {
-      name,
-      email,
-      type,
-      status,
+      name, email, type, status,
     };
     const updatedUser = await User.update(toUpdate, {
       where: { key: req.params.id },
@@ -92,14 +92,13 @@ const update = async (req, res) => {
 
 const remove = async (req, res) => {
   const { user } = req;
-  if (!user)
-    return res.status(401).send({ message: "user must be authenticated" });
+  if (!user) return res.status(401).send({ message: 'user must be authenticated' });
   try {
-    if (user.type !== "Admin" && user.key !== req.params.id) {
-      return res.status(401).send({ message: "unauthorized action" });
+    if (user.type !== 'Admin' && user.key !== req.params.id) {
+      return res.status(401).send({ message: 'unauthorized action' });
     }
     await User.destroy({ where: { key: req.params.id } });
-    return res.send({ message: "user removed" });
+    return res.send({ message: 'user removed' });
   } catch (err) {
     return res.status(500).send({ message: err.message });
   }

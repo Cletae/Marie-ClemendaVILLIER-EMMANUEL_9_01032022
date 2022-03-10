@@ -1,6 +1,8 @@
-"use strict";
-const { Model } = require("sequelize");
-const short = require("short-uuid");
+'use strict';
+const {
+  Model
+} = require('sequelize');
+const short = require('short-uuid');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -11,20 +13,17 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
-  }
-  User.init(
-    {
-      name: DataTypes.STRING,
-      email: DataTypes.STRING,
-      type: DataTypes.STRING,
-      password: DataTypes.STRING,
-      status: DataTypes.STRING,
-      key: { type: DataTypes.STRING, defaultValue: short.generate },
-    },
-    {
-      sequelize,
-      modelName: "User",
-    }
-  );
+  };
+  User.init({
+    name: DataTypes.STRING,
+    email: DataTypes.STRING,
+    type: DataTypes.STRING,
+    password: DataTypes.STRING,
+    status: DataTypes.STRING,
+    key: { type: DataTypes.STRING, defaultValue: short.generate },
+  }, {
+    sequelize,
+    modelName: 'User',
+  });
   return User;
 };

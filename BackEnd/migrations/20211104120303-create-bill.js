@@ -1,63 +1,63 @@
-"use strict";
+'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("Bills", {
+    await queryInterface.createTable('Bills', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       key: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       vat: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       status: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       type: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       commentary: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       name: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       fileName: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       filePath: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       date: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       amount: {
-        type: Sequelize.NUMBER,
+        type: Sequelize.NUMBER
       },
       commentAdmin: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       pct: {
-        type: Sequelize.NUMBER,
+        type: Sequelize.NUMBER
       },
       email: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
-      },
+        type: Sequelize.DATE
+      }
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("Bills");
-  },
+    await queryInterface.dropTable('Bills');
+  }
 };
