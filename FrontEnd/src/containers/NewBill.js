@@ -9,9 +9,9 @@ export default class NewBill {
     const formNewBill = this.document.querySelector(
       `form[data-testid="form-new-bill"]`
     );
-    formNewBill.addEventListener("submit", this.handleSubmit);
+    formNewBill.addEventListener("submit", (e) => this.handleSubmit(e));
     const file = this.document.querySelector(`input[data-testid="file"]`);
-    file.addEventListener("change", this.handleChangeFile);
+    file.addEventListener("change", (e) => this.handleChangeFile(e));
     this.fileUrl = null;
     this.fileName = null;
     this.billId = null;
@@ -21,13 +21,21 @@ export default class NewBill {
     e.preventDefault();
     const file = this.document.querySelector(`input[data-testid="file"]`)
       .files[0];
-    const filePath = e.target.value.split(/\\/g);
-    const fileName = filePath[filePath.length - 1];
+    const fileName = file.name;
     const formData = new FormData();
+    const fileFormatAuthorized = ["jpg", "png", "jpeg"];
+    const fileExtension = fileName.split(".").pop().toLowerCase();
     const email = JSON.parse(localStorage.getItem("user")).email;
     formData.append("file", file);
     formData.append("email", email);
+    if (fileFormatAuthorized.includes(fileExtension)) {
+      this.handleStore(formData, fileName);
+    } else {
+      alert("Le format du fichier doit être en jpg, png ou jpeg");
+    }
+  };
 
+  handleStore(formData, fileName) {
     this.store
       .bills()
       .create({
@@ -43,7 +51,7 @@ export default class NewBill {
         this.fileName = fileName;
       })
       .catch((error) => console.error(error));
-  };
+  }
   handleSubmit = (e) => {
     e.preventDefault();
     console.log(
