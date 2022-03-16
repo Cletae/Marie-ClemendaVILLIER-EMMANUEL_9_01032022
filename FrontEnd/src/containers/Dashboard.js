@@ -14,7 +14,6 @@ export const filteredBills = (data, status) => {
         if (typeof jest !== "undefined") {
           selectCondition = bill.status === status;
         } else {
-        /* istanbul ignore next */
           // in prod environment
           const userEmail = JSON.parse(localStorage.getItem("user")).email;
           selectCondition =
@@ -43,13 +42,7 @@ export const card = (bill) => {
       <div class='bill-card-name-container'>
         <div class='bill-card-name'> ${firstName} ${lastName} </div>
         <span class='bill-card-grey'> ... </span>
-      </div>
-      <div class='name-price-container'>
-        <span> ${bill.name} </span>
-        <span> ${bill.amount} € </span>
-      </div>
-      <div class='date-type-container'>
-        <span> ${formatDate(bill.date)} </span>
+@@ -47,139 +52,148 @@ export const card = (bill) => {
         <span> ${bill.type} </span>
       </div>
     </div>
@@ -79,6 +72,7 @@ export default class {
     $("#arrow-icon1").click((e) => this.handleShowTickets(e, bills, 1));
     $("#arrow-icon2").click((e) => this.handleShowTickets(e, bills, 2));
     $("#arrow-icon3").click((e) => this.handleShowTickets(e, bills, 3));
+    this.getBillsAllUsers();
     new Logout({ localStorage, onNavigate });
   }
 
@@ -88,32 +82,34 @@ export default class {
     $("#modaleFileAdmin1")
       .find(".modal-body")
       .html(
-        `<div style='text-align: center;'><img width=${imgWidth} src=${billUrl} alt="Bill"/></div>`
+        `<div style='text-align: center;'><img width=${imgWidth} src=${billUrl} /></div>`
       );
     if (typeof $("#modaleFileAdmin1").modal === "function")
       $("#modaleFileAdmin1").modal("show");
   };
 
   handleEditTicket(e, bill, bills) {
+    console.log("ok");
     if (this.counter === undefined || this.id !== bill.id) this.counter = 0;
     if (this.id === undefined || this.id !== bill.id) this.id = bill.id;
-    if (this.counter % 2 === 0) {
-      bills.forEach((b) => {
-        $(`#open-bill${b.id}`).css({ background: "#0D5AE5" });
-      });
-      $(`#open-bill${bill.id}`).css({ background: "#2A2B35" });
-      $(".dashboard-right-container div").html(DashboardFormUI(bill));
-      $(".vertical-navbar").css({ height: "150vh" });
-      this.counter++;
-    } else {
-      $(`#open-bill${bill.id}`).css({ background: "#0D5AE5" });
+    if (this.counter % 2 === 0)
+      if (this.checkListIsOpen) {
+        bills.forEach((b) => {
+          $(`#open-bill${b.id}`).css({ background: "#0D5AE5" });
+        });
+        $(`#open-bill${bill.id}`).css({ background: "#2A2B35" });
+        $(".dashboard-right-container div").html(DashboardFormUI(bill));
+        $(".vertical-navbar").css({ height: "150vh" });
+        this.counter++;
+      } else {
+        $(`#open-bill${bill.id}`).css({ background: "#0D5AE5" });
 
-      $(".dashboard-right-container div").html(`
-        <div id="big-billed-icon" data-testid="big-billed-icon"> ${BigBilledIcon} </div>
+        $(".dashboard-right-container div").html(`
+        <div id="big-billed-icon"> ${BigBilledIcon} </div>
       `);
-      $(".vertical-navbar").css({ height: "120vh" });
-      this.counter++;
-    }
+        $(".vertical-navbar").css({ height: "120vh" });
+        this.counter++;
+      }
     $("#icon-eye-d").click(this.handleClickIconEye);
     $("#btn-accept-bill").click((e) => this.handleAcceptSubmit(e, bill));
     $("#btn-refuse-bill").click((e) => this.handleRefuseSubmit(e, bill));
@@ -148,10 +144,12 @@ export default class {
         cards(filteredBills(bills, getStatus(this.index)))
       );
       this.counter++;
+      this.checkListIsOpen = true;
     } else {
       $(`#arrow-icon${this.index}`).css({ transform: "rotate(90deg)" });
       $(`#status-bills-container${this.index}`).html("");
       this.counter++;
+      this.checkListIsOpen = false;
     }
 
     bills.forEach((bill) => {
@@ -163,6 +161,7 @@ export default class {
     return bills;
   }
 
+  // not need to cover this function by tests
   getBillsAllUsers = () => {
     if (this.store) {
       return this.store
@@ -177,14 +176,11 @@ export default class {
           }));
           return bills;
         })
-        .catch((error) => {
-          throw error;
-        });
+        .catch(console.log);
     }
   };
 
   // not need to cover this function by tests
-  /* istanbul ignore next */
   updateBill = (bill) => {
     if (this.store) {
       return this.store
