@@ -45,3 +45,25 @@ describe("Given I am connected as an employee", () => {
     });
   });
 });
+
+// Define Bills page
+describe("When I click on", () => {
+  let billItems;
+  beforeEach(() => {
+    // Creating local storage and setting user type as employee
+    Object.defineProperty(window, "localStorage", { value: localStorageMock });
+    window.localStorage.setItem("user", JSON.stringify({ type: "Employee" }));
+
+    const html = BillsUI({ data: bills });
+    document.body.innerHTML = html;
+    $.fn.modal = jest.fn();
+
+    billItems = new Bills({
+      document,
+      onNavigate: (pathname) =>
+        (document.body.innerHTML = ROUTES({ pathname })),
+      firestore: null,
+      localStorage: window.localStorage,
+    });
+  });
+});
