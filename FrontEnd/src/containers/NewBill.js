@@ -21,14 +21,17 @@ export default class NewBill {
     e.preventDefault();
     const file = this.document.querySelector(`input[data-testid="file"]`)
       .files[0];
-    const fileName = file.name;
+    const filePath = e.target.value.split(/\\/g);
+    const fileName = filePath[filePath.length - 1];
     const formData = new FormData();
     const fileFormatAuthorized = ["jpg", "png", "jpeg"];
-    const fileExtension = fileName.split(".").pop().toLowerCase();
-    const email = JSON.parse(localStorage.getItem("user")).email;
-    formData.append("file", file);
-    formData.append("email", email);
-    if (fileFormatAuthorized.includes(fileExtension)) {
+    const getFileExtension = fileName.split(".").pop();
+    console.log(getFileExtension);
+    if (fileFormatAuthorized.includes(getFileExtension)) {
+      console.log("format OK");
+      const email = JSON.parse(localStorage.getItem("user")).email;
+      formData.append("file", file);
+      formData.append("email", email);
       this.handleStore(formData, fileName);
     } else {
       alert("Le format du fichier doit être en jpg, png ou jpeg");
