@@ -30,6 +30,42 @@ describe("Given I am connected as an employee", () => {
       await waitFor(() => screen.getByTestId("icon-window"));
       const windowIcon = screen.getByTestId("icon-window");
       //to-do write expect expression
+
+      Object.defineProperty(window, "localStorage", {
+        value: localStorageMock,
+      });
+      window.localStorage.setItem(
+        "user",
+        JSON.stringify({
+          type: "Employee",
+        })
+      );
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname });
+      };
+      const file = new File(["foo"], "foo.txt", {
+        type: "text/plain",
+      });
+      const inputFile = screen.getByTestId("file");
+      const fileError = screen.getByTestId("file-error");
+      const newbill = new NewBill({
+        document,
+        onNavigate,
+        store: null,
+        localStorage: window.localStorage,
+      });
+      fireEvent.change(inputFile, { target: { files: [file] } });
+      const e = {
+        preventDefault() {},
+        target: {
+          value: "C:\\fakepath\\foo.txt",
+        },
+      };
+      newbill.handleChangeFile(e);
+      console.log(inputFile);
+      expect(fileError.textContent).toBe(
+        "Veuillez choisir une image ou fichier au format .jpg, .jpeg ou .png"
+      );
     });
     test("Then bills should be ordered from earliest to latest", () => {
       const html = BillsUI({ data: bills });
