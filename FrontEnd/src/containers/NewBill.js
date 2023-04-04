@@ -17,7 +17,7 @@ export default class NewBill {
     this.billId = null;
     new Logout({ document, localStorage, onNavigate });
   }
-  handleChangeFile = (e) => {
+  handleChangeFile = async e => {
     e.preventDefault();
     const file = this.document.querySelector(`input[data-testid="file"]`)
       .files[0];
@@ -28,7 +28,7 @@ export default class NewBill {
     formData.append("file", file);
     formData.append("email", email);
 
-    this.store
+    await this.store
       .bills()
       .create({
         data: formData,
